@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kairos — Stop Scrolling. Start Mastering.</title>
+  <meta name="description" content="Transform any curiosity into an interconnected knowledge system powered by AI. Explore visual knowledge maps, audio companion briefings, and personalized obsession paths.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Neural Network Canvas -->
+  <canvas class="neural-canvas" id="neural-canvas"></canvas>
+
+  <!-- 1. LANDING PAGE VIEW -->
+  <div id="landing-view" class="view-container landing-view active">
+    <div class="landing-content">
+      
+      <!-- Top Navigation Bar -->
+      <header class="landing-header">
+        <div class="logo-container">
+          <div class="logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span>KAIROS</span>
+        </div>
+        <nav class="landing-nav">
+          <ul class="landing-nav-links">
+            <li><a href="#features-section">Features</a></li>
+            <li><a href="#pricing-section">Pricing</a></li>
+            <li><a href="#faq-section">FAQ</a></li>
+          </ul>
+        </nav>
+        <div class="landing-buttons-group" style="align-items: center;">
+          <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle light / dark mode" aria-label="Toggle theme">
+            <span class="toggle-icon" id="theme-toggle-icon">🌙</span>
+            <div class="toggle-track">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span id="theme-toggle-label">Dark</span>
+          </button>
+          <button class="dive-btn" id="hero-dive-btn-nav" style="padding: 10px 20px; font-size: 0.9rem; border-radius: 8px; box-shadow: none;">
+            Get Started
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Spacious Hero Section -->
+      <section class="hero-section">
+        <!-- Background Effects -->
+        <div class="hero-glow-bg"></div>
+        <div class="hero-grid-bg"></div>
+        <div class="hero-graph-bg">
+          <svg class="hero-svg-graph" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="glow-red" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+            <g class="graph-connections" stroke="rgba(220, 38, 38, 0.18)" stroke-width="1.2">
+              <line x1="150" y1="120" x2="300" y2="80" />
+              <line x1="300" y1="80" x2="450" y2="150" />
+              <line x1="450" y1="150" x2="320" y2="280" />
+              <line x1="320" y1="280" x2="180" y2="220" />
+              <line x1="180" y1="220" x2="150" y2="120" />
+              <line x1="300" y1="80" x2="600" y2="100" />
+              <line x1="600" y1="100" x2="650" y2="260" />
+              <line x1="650" y1="260" x2="480" y2="320" />
+              <line x1="480" y1="320" x2="320" y2="280" />
+              <line x1="450" y1="150" x2="650" y2="260" />
+              <line x1="150" y1="120" x2="100" y2="240" />
+              <line x1="100" y1="240" x2="320" y2="280" />
+            </g>
+            <g class="graph-nodes" fill="#dc2626" filter="url(#glow-red)">
+              <circle cx="150" cy="120" r="4" />
+              <circle cx="300" cy="80" r="5" />
+              <circle cx="450" cy="150" r="6.5" />
+              <circle cx="320" cy="280" r="5" />
+              <circle cx="600" cy="100" r="5" />
+              <circle cx="650" cy="260" r="5.5" />
+              <circle cx="480" cy="320" r="4.5" />
+              <circle cx="180" cy="220" r="4" />
+              <circle cx="100" cy="240" r="3.5" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- Floating Glass Metric Panels -->
+        <div class="hero-glass-panel panel-tl">
+          <div class="panel-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          </div>
+          <div class="panel-content">
+            <span class="panel-label">Knowledge Nodes</span>
+            <span class="panel-value">12,483</span>
+          </div>
+        </div>
+
+        <div class="hero-glass-panel panel-br">
+          <div class="panel-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          </div>
+          <div class="panel-content">
+            <span class="panel-label">Research Accuracy</span>
+            <span class="panel-value">98%</span>
+          </div>
+        </div>
+
+        <!-- Floating Pill Tags -->
+        <div class="hero-tag tag-pos-1">AI Research</div>
+        <div class="hero-tag tag-pos-2">Knowledge Maps</div>
+        <div class="hero-tag tag-pos-3">Deep Learning</div>
+        <div class="hero-tag tag-pos-4">Structured Thinking</div>
+        <div class="hero-tag tag-pos-5">Second Brain</div>
+
+        <div class="badge-glow">Stop scrolling. Start mastering.</div>
+        <h1>From Insight <span>to Impact.</span></h1>
+        <p>Kairos transforms scattered information into structured understanding through AI-powered research, visual knowledge maps, and personalized learning journeys.</p>
+        
+        <div class="landing-buttons-group">
+          <button class="dive-btn" id="hero-dive-btn">
+            Get Started
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+          <button class="demo-btn" id="watch-demo-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Explore Demo
+          </button>
+        </div>
+
+        <!-- Trust Indicator -->
+        <div class="trust-indicator">Built for students, researchers, and lifelong learners.</div>
+      </section>
+
+      <!-- Premium Features Grid -->
+      <section class="features-section" id="features-section">
+        <div class="features-grid">
+          
+          <!-- Card 1: AI-Powered Research -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="11" y1="8" x2="11" y2="14"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </svg>
+            </div>
+            <h3>AI-Powered Research</h3>
+            <p>Instantly breaks down any topic into structured concepts and key insights.</p>
+          </div>
+
+          <!-- Card 2: Interactive Knowledge Maps -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </div>
+            <h3>Interactive Knowledge Maps</h3>
+            <p>Explore visual connections between ideas and understand the bigger picture.</p>
+          </div>
+
+          <!-- Card 3: Personal Knowledge Universe -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                <circle cx="12" cy="12" r="3"></circle>
+                <circle cx="12" cy="4" r="1"></circle>
+                <circle cx="12" cy="20" r="1"></circle>
+              </svg>
+            </div>
+            <h3>Personal Knowledge Universe</h3>
+            <p>Build a growing network of everything you learn and discover over time.</p>
+          </div>
+          
+        </div>
+      </section>
+
+      <!-- Sections Divider (Membership & FAQ) -->
+      <div class="sections-divider" id="pricing-section">
+        <div class="section-half">
+          <h3 class="section-title">Membership</h3>
+          <div class="pricing-card glass-panel glow-border">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h4 style="font-weight:700;">Kairos Pro</h4>
+              <span style="font-size:0.75rem; font-family:var(--font-mono); color:var(--secondary-accent); background:rgba(0,212,255,0.1); padding:2px 8px; border-radius:4px;">POPULAR</span>
+            </div>
+            <div class="price">$12 <span>/ month</span></div>
+            <ul class="pricing-features">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Unlimited dynamic research sessions
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Full length 20+ min audio Masterclasses
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Interactive Corkboard Investigative Workspace
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Infinite AI Obsession branching paths
+              </li>
+            </ul>
+            <button class="dive-btn" style="width: 100%; justify-content: center; margin-top: 12px;" id="pricing-buy-btn">Upgrade to Pro</button>
+          </div>
+        </div>
+        <div class="section-half">
+          <h3 class="section-title">Common Inquiries</h3>
+          <div class="faq-list">
+            <div class="faq-item">
+              <h4>Is the information verified?</h4>
+              <p>Every single node in our system displays a source URL, publication date, and an AI credibility index. We color-code credibility so you can trace primary sources.</p>
+            </div>
+            <div class="faq-item">
+              <h4>What are Obsession Paths?</h4>
+              <p>They are AI suggestions that prioritize high-level intellectual connections over popular trends, steering your learning from one domain to another organically.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="landing.js"></script>
+</body>
+</html>

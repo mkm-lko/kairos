@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kairos Workspace — Explore & Master</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Background Neural Network Canvas -->
+  <canvas class="neural-canvas" id="neural-canvas"></canvas>
+
+  <!-- 2. AI RESEARCH ORCHESTRATOR VIEW -->
+  <div id="orchestrator-view" class="view-container orchestrator-view">
+    <div class="orchestrator-box glass-panel glow-border">
+      <div class="orchestrator-header">
+        <div class="orchestrator-title">
+          <h2 id="orchestrator-topic-title">AI RESEARCH ORCHESTRATOR</h2>
+          <p id="orchestrator-status">Initializing research framework...</p>
+        </div>
+        <div class="agent-chips">
+          <div class="agent-chip active" id="chip-gpt">
+            <div class="pulse-dot"></div>
+            <span>GPT Reasoner</span>
+          </div>
+          <div class="agent-chip" id="chip-claude">
+            <div class="pulse-dot"></div>
+            <span>Claude Writer</span>
+          </div>
+          <div class="agent-chip gemini" id="chip-gemini">
+            <div class="pulse-dot"></div>
+            <span>Gemini Broker</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="orchestrator-steps">
+        <div class="loading-step" id="step-0">
+          <div class="step-indicator">1</div>
+          <div class="step-details">
+            <div class="step-name">Topic Decomposition</div>
+            <div class="step-desc" id="desc-0">Breaking the topic down into structured modules...</div>
+          </div>
+        </div>
+        <div class="loading-step" id="step-1">
+          <div class="step-indicator">2</div>
+          <div class="step-details">
+            <div class="step-name">Multi-Agent Research</div>
+            <div class="step-desc" id="desc-1">Gathering source facts and synthesizing information...</div>
+          </div>
+        </div>
+        <div class="loading-step" id="step-2">
+          <div class="step-indicator">3</div>
+          <div class="step-details">
+            <div class="step-name">Source Verification</div>
+            <div class="step-desc" id="desc-2">Reviewing URLs and establishing credibility indices...</div>
+          </div>
+        </div>
+        <div class="loading-step" id="step-3">
+          <div class="step-indicator">4</div>
+          <div class="step-details">
+            <div class="step-name">Knowledge Map Construction</div>
+            <div class="step-desc" id="desc-3">Positioning nodes and connecting relationship lines...</div>
+          </div>
+        </div>
+        <div class="loading-step" id="step-4">
+          <div class="step-indicator">5</div>
+          <div class="step-details">
+            <div class="step-name">Audio Companion Compilation</div>
+            <div class="step-desc" id="desc-4">Compiling ElevenLabs briefs and atmospheric soundtracks...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent Log Terminal console -->
+      <div class="orchestrator-console" id="orchestrator-console">
+        <div class="console-line"><span class="system-agent">[SYSTEM]</span> Starting deep dive orchestrator. Ready for topic query...</div>
+      </div>
+
+      <button class="dive-btn" id="launch-workspace-btn" style="display: none; align-self: center; margin-top: 10px; padding: 14px 28px;">
+        Launch Workspace
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- 3. MAIN WORKSPACE VIEW -->
+  <div id="workspace-view" class="view-container workspace-view">
+    
+    <!-- Workspace Header -->
+    <header class="workspace-header">
+      <div class="header-left">
+        <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" title="Toggle Sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+          </svg>
+        </button>
+        <div class="topic-breadcrumbs">
+          <span class="breadcrumb-root" id="breadcrumb-home">KAIROS</span>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current" id="breadcrumb-topic-title">QUANTUM PHYSICS</span>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="header-search-bar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="workspace-search-input" placeholder="Search node titles or keywords...">
+        </div>
+      </div>
+
+      <div class="header-right" style="align-items: center;">
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle light / dark mode" aria-label="Toggle theme" style="padding: 6px 12px; margin-right: 8px;">
+          <span class="toggle-icon" id="theme-toggle-icon">🌙</span>
+          <div class="toggle-track" style="width: 28px; height: 16px;">
+            <div class="toggle-thumb" style="width: 10px; height: 10px; top: 2px; left: 2px;"></div>
+          </div>
+          <span id="theme-toggle-label" style="font-size: 0.75rem;">Dark</span>
+        </button>
+
+        <button class="header-action-btn primary" id="workspace-new-dive-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          New Dive
+        </button>
+        <div class="user-xp-badge" id="header-xp-badge" title="Click to view Learning Tree">
+          <div class="xp-circle"></div>
+          <span class="xp-text" id="header-xp-text">0 XP</span>
+          <span class="xp-level" id="header-xp-level">EXPLORER</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Left Sidebar -->
+    <aside class="workspace-left-sidebar" id="workspace-left-sidebar">
+      <div class="sidebar-menu">
+        <div class="menu-item active" id="menu-item-graph" data-view="graph">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          Knowledge Map
+        </div>
+        <div class="menu-item" id="menu-item-crime" data-view="crime" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 22 22 22 12 2"></polygon>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          Investigation Board
+        </div>
+        <div class="menu-item" id="menu-item-journey" data-view="journey">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="6 2 18 2 18 6 6 6 6 2"></polygon>
+            <rect x="3" y="6" width="18" height="16" rx="2"></rect>
+            <path d="M10 12h4"></path>
+          </svg>
+          Learning Tree
+        </div>
+        <div class="menu-item" id="menu-item-community" data-view="community">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          Community Maps
+        </div>
+      </div>
+      
+      <div class="sidebar-title">SAVED TOPICS</div>
+      <div class="sidebar-saved-list" id="saved-topics-list">
+        <!-- Dyn list of user research sessions -->
+        <div class="saved-item active" data-topic="Quantum Physics">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+          </svg>
+          Quantum Physics
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Workspace Display Panels -->
+    <div id="workspace-center-panel" style="position: relative; width: 100%; height: 100%; grid-column: 2; grid-row: 2; overflow: hidden;">
+      
+      <!-- 4. CANVAS KNOWLEDGE GRAPH VIEW -->
+      <div class="canvas-viewport" id="canvas-viewport" style="width: 100%; height: 100%;">
+        <div class="canvas-content" id="canvas-content" style="transform: translate(0px, 0px) scale(1);">
+          
+          <!-- Connections SVG Layer -->
+          <svg class="svg-connections-layer" id="svg-connections-layer">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--border-color)" />
+              </marker>
+              <marker id="arrow-active" viewBox="0 0 10 10" refX="24" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent-color)" />
+              </marker>
+            </defs>
+          </svg>
+
+          <!-- Nodes will be injected here dynamically -->
+
+        </div>
+
+        <!-- Canvas Controls overlay -->
+        <div class="canvas-controls">
+          <button class="control-btn" id="canvas-zoom-in" title="Zoom In">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button class="control-btn" id="canvas-zoom-out" title="Zoom Out">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button class="control-btn" id="canvas-zoom-fit" title="Fit to Screen">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+            </svg>
+          </button>
+          <button class="control-btn" id="canvas-surprise-me" title="Surprise Me (Discovery Mode)" style="margin-top: 8px; border-color: var(--secondary-accent); color: var(--secondary-accent);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 7. TRUE CRIME BOARD VIEW -->
+      <div class="true-crime-board" id="true-crime-board" style="display: none; width: 100%; height: 100%;">
+        <div class="true-crime-content" id="true-crime-content" style="transform: translate(0px, 0px) scale(1);">
+          
+          <!-- Red string connections -->
+          <svg class="true-crime-connections" id="true-crime-connections">
+            <!-- Red string path lines will be injected here -->
+          </svg>
+
+          <!-- Evidence / Polaroid Cards will be injected here dynamically -->
+
+        </div>
+
+        <!-- True Crime Controls -->
+        <div class="canvas-controls">
+          <button class="control-btn" id="crime-zoom-in" title="Zoom In">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button class="control-btn" id="crime-zoom-out" title="Zoom Out">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+          <button class="control-btn" id="crime-zoom-fit" title="Fit Board">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- COMMUNITY PANEL -->
+      <div class="community-panel" id="community-panel" style="display: none; width: 100%; height: 100%; overflow-y: auto; padding: 40px; background-color: var(--bg-color);">
+        <div style="max-width: 800px; margin: 0 auto;">
+          <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 8px;">Community Libraries</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 32px;">Clone visual maps generated by community builders and build contribution trees.</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;" id="community-grid">
+            <!-- Injected by script -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. AUDIO COMPANION FLOAT WIDGET -->
+      <div class="audio-companion-widget glass-panel glow-border" id="audio-companion-widget">
+        <div class="audio-widget-header">
+          <h4>
+            <div class="audio-pulse-ring"></div>
+            <span>Audio Companion</span>
+          </h4>
+          <button class="details-close-btn" id="audio-close-btn" title="Minimize Widget">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <div style="font-size:0.75rem; color:var(--text-secondary); line-height: 1.4; display:flex; flex-direction:column; gap:2px;">
+          <span style="font-weight:600; color:var(--text-primary); font-family:var(--font-mono); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="audio-topic-playing">Quantum Physics</span>
+          <span id="audio-module-playing">Module: Wave-Particle Duality</span>
+        </div>
+
+        <div class="audio-mode-selector">
+          <button class="audio-mode-btn active" data-mode="quick">Quick</button>
+          <button class="audio-mode-btn" data-mode="deep">Deep</button>
+          <button class="audio-mode-btn" data-mode="master">Master</button>
+        </div>
+
+        <div class="audio-progress-area">
+          <div class="audio-progress-bar-container" id="audio-progress-bar">
+            <div class="audio-progress-fill" id="audio-progress-fill" style="width: 0%;"></div>
+          </div>
+          <div class="audio-time-labels">
+            <span id="audio-time-current">0:00</span>
+            <span id="audio-time-duration">2:00</span>
+          </div>
+        </div>
+
+        <div class="audio-player-controls">
+          <button class="audio-small-btn" id="audio-prev-btn" title="Skip Back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="19 20 9 12 19 4 19 20"></polygon>
+              <line x1="5" y1="19" x2="5" y2="5"></line>
+            </svg>
+          </button>
+          <button class="audio-control-circle" id="audio-play-btn" title="Play Briefing">
+            <!-- Play icon -->
+            <svg id="play-svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 2px;">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <!-- Pause icon -->
+            <svg id="pause-svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <rect x="6" y="4" width="4" height="16"></rect>
+              <rect x="14" y="4" width="4" height="16"></rect>
+            </svg>
+          </button>
+          <button class="audio-small-btn" id="audio-next-btn" title="Skip Forward">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 4 15 12 5 20 5 4"></polygon>
+              <line x1="19" y1="5" x2="19" y2="19"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="audio-sound-settings">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span>Soundtrack:</span>
+            <span class="soundtrack-type-badge" id="soundtrack-badge">AMBIENT</span>
+          </div>
+          <span class="audio-speed-badge" id="audio-speed-badge">1.0x</span>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- 5. RIGHT SIDEBAR DETAILS PANEL -->
+    <aside class="workspace-right-sidebar" id="workspace-right-sidebar">
+      <div class="details-header">
+        <h3 id="details-panel-title">Node Explorer</h3>
+        <button class="details-close-btn" id="details-close-btn" title="Close Panel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="details-scrollable" id="details-scrollable-content">
+        <!-- Initial helper state -->
+        <div id="details-placeholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; color: var(--text-muted); gap: 16px; padding: 20px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <div>
+            <h4 style="color: var(--text-secondary); margin-bottom: 6px;">No Node Selected</h4>
+            <p style="font-size: 0.8rem; line-height: 1.4;">Select any node on the infinite map canvas to explore its synthesized information, notes, verified sources, and related suggestions.</p>
+          </div>
+        </div>
+
+        <!-- Node Details Content (initially hidden) -->
+        <div id="details-node-content" style="display: none; flex-direction: column; gap: 24px;">
+          
+          <div class="details-node-meta" id="details-node-meta">
+            <!-- Node badges loaded dynamically -->
+          </div>
+
+          <h2 class="details-node-title" id="details-node-title">Wave-Particle Duality</h2>
+
+          <div>
+            <div class="details-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              SYNTHESIZED INSIGHT
+            </div>
+            <div class="details-text-block" id="details-node-body">
+              Wave-particle duality is the concept in quantum mechanics that every particle or quantum entity may be described as either a particle or a wave. It expresses the inability of the classical concepts "particle" or "wave" to fully describe the behavior of quantum-scale objects.
+            </div>
+          </div>
+
+          <!-- User Notes Editor Section -->
+          <div class="user-notes-section">
+            <div class="details-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"></path></svg>
+              PERSONAL NOTES
+            </div>
+            <textarea class="notes-textarea" id="node-notes-input" placeholder="Jot down notes, personal thoughts, or research reminders for this node..."></textarea>
+            <span class="notes-save-status" id="node-notes-status">Notes saved automatically.</span>
+          </div>
+
+          <!-- Sources verification -->
+          <div>
+            <div class="details-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+              SOURCE VERIFICATION
+            </div>
+            <div class="sources-list" id="details-sources-list">
+              <!-- Dynamically built lists of verified links -->
+            </div>
+          </div>
+
+          <!-- Related concepts / Obsession suggestions -->
+          <div>
+            <div class="details-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              AI OBSESSION PATHWAYS
+            </div>
+            <div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:8px;">Deepen your curiosity. Select a related domain below to expand the knowledge universe:</div>
+            <div class="related-concepts-grid" id="details-related-list">
+              <!-- Dynamically mapped relative links -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 8. GAMIFICATION & LEARNING TREE VIEW -->
+  <div id="gamification-view" class="view-container gamification-view">
+    <div class="gami-container">
+      <div class="gami-header">
+        <h2 style="font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, var(--accent-color), var(--secondary-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">LEARNING JOURNEY & XP</h2>
+        <button class="header-action-btn" id="gami-back-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Back to Workspace
+        </button>
+      </div>
+
+      <div class="gami-profile-card glass-panel glow-border">
+        <div class="gami-avatar" id="gami-avatar-text">EL</div>
+        <div class="gami-level-progress">
+          <div class="progress-header">
+            <div>
+              <span style="font-weight: 700; font-size: 1.1rem;" id="gami-user-name">Curious Mind</span>
+              <span style="color: var(--text-secondary); font-size: 0.85rem;" id="gami-profile-rank">(Level: Researcher)</span>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 0.9rem;">
+              <span id="gami-current-xp" style="color: var(--accent-color); font-weight:bold;">120</span> / <span id="gami-target-xp" style="color: var(--text-muted);">500</span> XP
+            </div>
+          </div>
+          <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="gami-progress-bar-fill" style="width: 24%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Obsession statistics grid -->
+      <div class="obsession-stats-grid">
+        <div class="obsession-stat-card glass-panel">
+          <div class="obsession-stat-num" id="stat-obsession-score">18</div>
+          <div class="obsession-stat-lbl">Obsession Score</div>
+        </div>
+        <div class="obsession-stat-card glass-panel">
+          <div class="obsession-stat-num" id="stat-notes-created">4</div>
+          <div class="obsession-stat-lbl">Notes Created</div>
+        </div>
+        <div class="obsession-stat-card glass-panel">
+          <div class="obsession-stat-num" id="stat-connections-discovered">12</div>
+          <div class="obsession-stat-lbl">Connections Discovered</div>
+        </div>
+        <div class="obsession-stat-card glass-panel">
+          <div class="obsession-stat-num" id="stat-topics-mastered">1</div>
+          <div class="obsession-stat-lbl">Topics Mastered</div>
+        </div>
+      </div>
+
+      <!-- Learning Tree details box -->
+      <div class="learning-tree-box glass-panel glow-border">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:16px;">
+          <div>
+            <h3 style="font-weight:700; font-size:1.15rem;" id="tree-active-topic">Quantum Physics</h3>
+            <p style="font-size:0.8rem; color:var(--text-secondary);">Unlock glowing nodes by exploring subjects in the workspace.</p>
+          </div>
+          <span style="font-family:var(--font-mono); font-size:0.8rem; background:rgba(16,185,129,0.1); color:var(--success-color); padding:4px 10px; border-radius:100px; font-weight:600;" id="tree-completion-badge">20% Completed</span>
+        </div>
+        
+        <div class="learning-tree-nodes" id="learning-tree-nodes-list">
+          <!-- Dynamically populated modules branch -->
+        </div>
+      </div>
+
+      <!-- Achievements list -->
+      <div>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 16px;">Unlocked Milestones</h3>
+        <div class="achievements-grid" id="achievements-list">
+          <!-- Dynamically loaded milestones -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVEL UNLOCK POPUP OVERLAY NOTIFICATION -->
+  <div class="unlock-popup" id="unlock-popup">
+    <div class="unlock-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+      </svg>
+    </div>
+    <div class="unlock-message">
+      <h5 id="unlock-popup-title">Milestone Achieved!</h5>
+      <p id="unlock-popup-desc">You are now a Level 2 Explorer.</p>
+    </div>
+  </div>
+
+  <!-- NODE INFO FLOATING POPUP -->
+  <div id="node-info-popup" role="dialog" aria-label="Node information">
+    <!-- Filled dynamically by showNodePopup() -->
+  </div>
+
+  <!-- Research Command Modal Overlay -->
+  <div class="research-modal-overlay" id="research-modal-overlay">
+    <div class="research-modal">
+      <div class="modal-header">
+        <h3>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #EF4444;">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          KAIROS LAUNCHPAD <span>BETA</span>
+        </h3>
+        <button class="modal-close-btn" id="modal-close-btn" title="Close Launchpad">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-search-wrapper">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="topic-input" placeholder="What are you obsessed with? Try 'Quantum Physics' or 'Ancient Rome'..." autocomplete="off">
+        <button class="dive-btn" id="search-submit-btn" style="padding: 8px 16px; font-size: 0.85rem; border-radius: 8px; box-shadow: none;">
+          Launch
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-suggestions-title">SUGGESTED OBSESSIONS</div>
+      <div class="modal-suggestions-grid" id="modal-suggestion-tags">
+        <div class="suggestion-card" data-topic="Quantum Physics">
+          <h4>Quantum Physics</h4>
+          <p>Wave functions, probability clouds, and reality's core fabric.</p>
+        </div>
+        <div class="suggestion-card" data-topic="Ancient Rome">
+          <h4>Ancient Rome</h4>
+          <p>Legions, emperors, aqueducts, and the republic's collapse.</p>
+        </div>
+        <div class="suggestion-card" data-topic="Cybersecurity">
+          <h4>Cybersecurity</h4>
+          <p>Defending nodes, hacking loops, and cryptographic foundations.</p>
+        </div>
+        <div class="suggestion-card" data-topic="True Crime">
+          <h4>True Crime</h4>
+          <p>Autumn of Terror, red threads, suspects, and forensic boards.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=4"></script>
+</body>
+</html>
