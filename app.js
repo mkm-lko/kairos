@@ -4,7 +4,7 @@
  */
 
 // --- 0. GEMINI API CONFIGURATION ---
-const GEMINI_API_KEY = "AQ.Ab8RN6L1_gEuUVDLDHtW5sV1VmUgXvl5DkcTg5AxV7fyd9JmRA";
+const GEMINI_API_KEY = "AQ.Ab8RN6ISHeZcAmWNVil1A-lBYJsNJSun6ZgcC6jNumSfg81frQ";
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
 
 /**
@@ -593,6 +593,9 @@ const STATE = {
   savedTopics: ["Quantum Physics"],
   isSidebarCollapsed: false,
   isDetailsCollapsed: false,
+
+  // AI Chat state
+  aiChatHistory: [],
 
   // Audio state
   audio: {
@@ -1467,11 +1470,8 @@ function selectNode(node) {
     <span class="true-crime-badge badge-victim" style="margin-top:0;">${node.importance} Priority</span>
   `;
 
-  // Load notes
-  const notesKey = `kairos_notes_${STATE.currentTopic}_${node.id}`;
-  const notesInput = document.getElementById("node-notes-input");
-  notesInput.value = STATE.notes[notesKey] || "";
-  document.getElementById("node-notes-status").textContent = STATE.notes[notesKey] ? "Notes loaded." : "Notes saved automatically.";
+  // Reset AI chat panel for the newly selected node
+  resetAIChatPanel(node);
 
   // Load sources list
   const sourcesContainer = document.getElementById("details-sources-list");
@@ -1541,26 +1541,217 @@ function closeDetailsPanel() {
 }
 
 function handleNotesInput(val) {
-  if (!STATE.selectedNode) return;
+  // kept for backward compatibility (no-op now that notes panel is replaced)
+}
 
-  const notesKey = `kairos_notes_${STATE.currentTopic}_${STATE.selectedNode.id}`;
-  STATE.notes[notesKey] = val;
-  localStorage.setItem(notesKey, val);
+// --- AI CHAT PANEL ---
 
-  const statusEl = document.getElementById("node-notes-status");
-  statusEl.textContent = "Saving...";
+/**
+ * Resets the chat messages area when a new node is selected.
+ */
+function resetAIChatPanel(node) {
+  STATE.aiChatHistory = [];
 
-  // Debounce saving note status
-  clearTimeout(STATE.notesDebounce);
-  STATE.notesDebounce = setTimeout(() => {
-    statusEl.textContent = "Notes saved automatically.";
+  const messagesEl = document.getElementById("ai-chat-messages");
+  if (!messagesEl) return;
 
-    // Grant tiny XP for note taking first time
-    if (!localStorage.getItem(`xp_notes_${notesKey}`)) {
-      localStorage.setItem(`xp_notes_${notesKey}`, "true");
-      addXP(50, "Wrote Personal Note");
+  messagesEl.innerHTML = `
+    <div class="ai-chat-bot-row">
+      <div class="ai-msg-avatar bot">K</div>
+      <div class="ai-chat-bot-bubble">
+        <span>Hi! Ask anything about <strong>${escapeHtml(node.title)}</strong> or the topic <strong>${escapeHtml(STATE.currentTopic)}</strong>.</span>
+        <div class="ai-msg-time">Just now</div>
+      </div>
+    </div>
+  `;
+
+  const inputEl = document.getElementById("ai-chat-input");
+  if (inputEl) { inputEl.value = ""; inputEl.focus(); }
+}
+
+/**
+ * Reads the chat input, appends the user bubble, shows a typing indicator,
+ * calls Gemini with node context, then appends the AI reply.
+ */
+async function sendAIChatMessage() {
+  const inputEl = document.getElementById("ai-chat-input");
+  const sendBtn = document.getElementById("ai-chat-send-btn");
+  const messagesEl = document.getElementById("ai-chat-messages");
+  if (!inputEl || !messagesEl) return;
+
+  const question = inputEl.value.trim();
+  if (!question) return;
+
+  // Clear input immediately
+  inputEl.value = "";
+  sendBtn.disabled = true;
+
+  // Append user bubble
+  appendChatBubble(messagesEl, "user", question);
+
+  // Store in history
+  STATE.aiChatHistory.push({ role: "user", parts: [{ text: question }] });
+
+  // Show typing indicator (new CSS structure)
+  const typingEl = document.createElement("div");
+  typingEl.className = "ai-chat-typing-row";
+  typingEl.innerHTML = `
+    <div class="ai-msg-avatar bot">K</div>
+    <div class="ai-chat-typing"><span></span><span></span><span></span></div>
+  `;
+  messagesEl.appendChild(typingEl);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  // Build shared prompt (used by both Gemini and fallback)
+  const node = STATE.selectedNode;
+  const nodeContext = node
+    ? `Context: Node titled "${node.title}". Summary: "${node.summary}". Topic: "${STATE.currentTopic}".`
+    : `Context: Exploring topic "${STATE.currentTopic}".`;
+
+  const recentHistory = STATE.aiChatHistory.slice(-6);
+  let historyText = "";
+  for (let i = 0; i < recentHistory.length - 1; i++) {
+    const msg = recentHistory[i];
+    historyText += msg.role === "user"
+      ? `\nPrevious Q: ${msg.parts[0].text}`
+      : `\nPrevious A: ${msg.parts[0].text}`;
+  }
+
+  const fullPrompt = `You are Kairos AI, a highly knowledgeable and accurate educational assistant.
+${nodeContext}${historyText}
+
+Question: ${question}
+
+Give a thorough, factual, educational answer in clear plain prose paragraphs. No markdown, no bullets, no bold/italic. Be accurate, detailed, and directly answer using the topic context.`;
+
+  let answer = null;
+
+  // --- Attempt 1: Gemini API ---
+  try {
+    const geminiRes = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: fullPrompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
+      })
+    });
+    if (geminiRes.ok) {
+      const data = await geminiRes.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) answer = text.trim();
+    } else {
+      console.warn("Gemini API returned:", geminiRes.status, "— trying fallback...");
     }
-  }, 800);
+  } catch (e) {
+    console.warn("Gemini fetch error:", e.message, "— trying fallback...");
+  }
+
+  // --- Attempt 2: Pollinations AI GET (compact combined question, no system param) ---
+  if (!answer) {
+    try {
+      const topic = STATE.currentTopic || "general knowledge";
+      const compact = `As a ${topic} expert, answer this in clear plain prose paragraphs (no markdown, no bullets): ${question}`.slice(0, 500);
+      const pollRes = await fetch(
+        `https://text.pollinations.ai/${encodeURIComponent(compact)}?model=openai&private=true`,
+        { method: "GET" }
+      );
+      if (pollRes.ok) {
+        const raw = await pollRes.text();
+        if (raw && raw.trim().length > 10 && !raw.trim().startsWith("{")) {
+          answer = raw.trim();
+        }
+      } else {
+        console.warn("Pollinations GET returned:", pollRes.status);
+      }
+    } catch (e) {
+      console.warn("Pollinations GET error:", e.message);
+    }
+  }
+
+  // --- Attempt 3: Pollinations /openai (OpenAI-compatible chat completions) ---
+  if (!answer) {
+    try {
+      const topic = STATE.currentTopic || "general knowledge";
+      const pollRes2 = await fetch("https://text.pollinations.ai/openai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "openai",
+          private: true,
+          messages: [
+            { role: "system", content: "You are an expert educational assistant. Give thorough, factual answers in clear plain prose. No markdown, no bullets." },
+            { role: "user", content: `Topic: ${topic}.\n\n${question}` }
+          ]
+        })
+      });
+      if (pollRes2.ok) {
+        const data = await pollRes2.json();
+        const text = data.choices?.[0]?.message?.content;
+        if (text && text.trim().length > 0) answer = text.trim();
+      } else {
+        console.warn("Pollinations POST returned:", pollRes2.status);
+      }
+    } catch (e) {
+      console.warn("Pollinations POST error:", e.message);
+    }
+  }
+
+  // --- Final ---
+  typingEl.remove();
+  if (answer) {
+    STATE.aiChatHistory.push({ role: "model", parts: [{ text: answer }] });
+    appendChatBubble(messagesEl, "ai", answer);
+    addXP(10, "Asked AI a Question");
+  } else {
+    appendChatBubble(messagesEl, "ai", "I couldn't reach the AI right now. Check your connection and try again.");
+  }
+
+  sendBtn.disabled = false;
+  inputEl.focus();
+}
+
+/** Appends a styled chat message bubble to the messages container. */
+function appendChatBubble(container, role, text) {
+  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const msgEl = document.createElement("div");
+
+  if (role === "user") {
+    msgEl.className = "ai-chat-user-row";
+    msgEl.innerHTML = `
+      <div class="ai-chat-user-bubble">
+        ${escapeHtml(text)}
+        <div class="ai-msg-time">${timeStr}</div>
+      </div>
+      <div class="ai-msg-avatar user">U</div>
+    `;
+  } else {
+    msgEl.className = "ai-chat-bot-row";
+    // Split text by newlines and wrap in paragraphs if there are any
+    const paragraphs = text.split(/\n+/).map(p => p.trim()).filter(Boolean);
+    const contentHtml = paragraphs.map(p => `<p>${escapeHtml(p)}</p>`).join("");
+
+    msgEl.innerHTML = `
+      <div class="ai-msg-avatar bot">K</div>
+      <div class="ai-chat-bot-bubble">
+        ${contentHtml || escapeHtml(text)}
+        <div class="ai-msg-time">${timeStr}</div>
+      </div>
+    `;
+  }
+
+  container.appendChild(msgEl);
+  container.scrollTop = container.scrollHeight;
+}
+
+/** Safely escapes user / AI text for innerHTML insertion. */
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 // --- 9. AUDIO COMPANION WITH WEB AUDIO API SYNTHESIZER ---
@@ -2312,11 +2503,30 @@ function registerUIEventListeners() {
     detailsCloseBtn.addEventListener("click", closeDetailsPanel);
   }
 
-  // Notes Key Listening auto-save
-  const nodeNotesInput = document.getElementById("node-notes-input");
-  if (nodeNotesInput) {
-    nodeNotesInput.addEventListener("input", (e) => {
-      handleNotesInput(e.target.value);
+  // AI Chat: send button click
+  const aiChatSendBtn = document.getElementById("ai-chat-send-btn");
+  if (aiChatSendBtn) {
+    aiChatSendBtn.addEventListener("click", () => {
+      sendAIChatMessage();
+    });
+  }
+
+  // AI Chat: Enter key in input
+  const aiChatInput = document.getElementById("ai-chat-input");
+  if (aiChatInput) {
+    aiChatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendAIChatMessage();
+      }
+    });
+  }
+
+  // AI Chat: Clear chat button click
+  const aiChatClearBtn = document.getElementById("ai-chat-clear-btn");
+  if (aiChatClearBtn) {
+    aiChatClearBtn.addEventListener("click", () => {
+      resetAIChatPanel(STATE.selectedNode || { title: "this topic", summary: "" });
     });
   }
 
